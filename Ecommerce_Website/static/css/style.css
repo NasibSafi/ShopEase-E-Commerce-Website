@@ -25,6 +25,9 @@
 .nav-link:hover,
 .nav-link:focus {
     color: #00aaff;
+    background-color: #00aaff21;
+    transition: background-color 0.3s ease;
+}
 }
 
 .navbar-toggler {
@@ -187,7 +190,7 @@
     }
 }
 
-/* Additional Styles */
+/* Additional Styles images*/
 
 .product-item {
     overflow: hidden;
@@ -198,7 +201,9 @@
     transition: transform 0.3s ease;
 }
 
-.product-item:hover img {
+.product-item:
+
+img {
     transform: scale(1.1);
 }
 
