@@ -1,7 +1,6 @@
-<center>
 # ShopEase E-Commerce Website
 This is a group project for WOC7014 FRAMEWORK-BASED SOFTWARE DESIGN AND DEVELOPMENT
-
+ 
 # Group J
 | Name           | Metric number |
 | -------------- | ------------- |
@@ -11,6 +10,6 @@ This is a group project for WOC7014 FRAMEWORK-BASED SOFTWARE DESIGN AND DEVELOPM
 | Liu JiaLiang   | S2180651      |
 | Jie Jiang      | S2183694      |
   
-<img scr="Ecommerce_Website/static/images/ShopEase.jpg" width="500">
+<img src="Ecommerce_Website/static/images/ShopEase.jpg" width="1000">
  
-</center>
+
