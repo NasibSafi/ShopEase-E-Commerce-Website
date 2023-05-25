@@ -1,0 +1,49 @@
+{% extends 'base-user.html' %}
+{% load static %}
+
+{% block user_content %}
+<h3 class="common_title2">Shipping address</h3>
+<div class="site_con">
+	<dl>
+		<dt>current address：</dt>
+		{% if addr_str %}
+		<dd>{{ addr_str }}</dd>
+		{% else %}
+		<dd>no default shipping address</dd>
+		{% endif %}
+	</dl>					
+</div>
+<h3 class="common_title2">edit address</h3>
+<div class="site_con">
+	<form method="post">
+		{% csrf_token %}
+		<div class="form_group">
+			<label>recipient：</label>
+			<input type="text" name="receiver">
+		</div>
+		<div class="form_group form_group2">
+			<label>Address：</label>
+			<textarea class="site_area" name="addr"></textarea>
+		</div>
+		<div class="form_group">
+			<label>Post code：</label>
+			<input type="text" name="zip_code">
+		</div>
+		<div class="form_group">
+			<label>phone：</label>
+			<input type="text" name="phone">
+		</div>
+
+		<input type="submit" name="" value="submit" class="info_submit">
+	</form>
+	{{ errmsg }}
+</div>
+{% endblock user_content %}
+
+
+
+
+
+
+
+

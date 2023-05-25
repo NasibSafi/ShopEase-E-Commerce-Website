@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Fresh Everyday-Submit Order{% endblock title %}
+
+{% block content %}
+
+	{% include 'header-con.html' %}
+
+	<div class="search_bar clearfix">
+		<a href="{% url 'goods:index' %}" class="logo fl"><img src="{% static 'images/logo.png' %}"></a>
+		<div class="sub_page_name fl">|&nbsp;&nbsp;&nbsp;&nbsp;Submit Order</div>
+		<div class="search_con fr">
+			<input type="text" class="input_text fl" name="" placeholder="search product">
+			<input type="button" class="input_btn fr" name="" value="search">
+		</div>		
+	</div>
+	
+	<h3 class="common_title">Confirm your delivery address</h3>
+
+	<div class="common_list_con clearfix">
+		<dl>
+			<dt>sent to：</dt>
+			{% for addr in addrs %}
+			<dd><input type="radio" name="address" value="{{ addr.id }}" {% if addr.is_default %}checked{% endif %}>{{ addr.addr }}（{{ addr.receiver }} receive） {{ addr.phone }}</dd>
+			{% endfor %}
+		</dl>
+		<a href="{% url 'users:user_site' %}" class="edit_site">Edit shipping address</a>
+
+	</div>
+	
+	<h3 class="common_title">payment method</h3>
+	<div class="common_list_con clearfix">
+		<div class="pay_style_con clearfix">
+			<input type="radio" name="pay_style" value="1" checked>
+			<label class="cash">cash on delivery</label>
+			<input type="radio" name="pay_style" value="2">
+			<label class="weixin">WeChat pay</label>
+			<input type="radio" name="pay_style" value="3">
+			<label class="zhifubao">Alipay</label>
+			<input type="radio" name="pay_style" value="4">
+			<label class="bank">bank card</label>
+		</div>
+	</div>
+
+	<h3 class="common_title">product list</h3>
+	
+	<div class="common_list_con clearfix">
+		<ul class="goods_list_th clearfix">
+			<li class="col01">product name</li>
+			<li class="col02">commodity unit</li>
+			<li class="col03">commodity price</li>
+			<li class="col04">quantity</li>
+			<li class="col05">Subtotal</li>
+		</ul>
+		{% for sku in skus %}
+		<ul class="goods_list_td clearfix">
+			<li class="col01">{{ forloop.counter  }}</li>			
+			<li class="col02"><img src="{{ sku.image.url }}"></li>
+			<li class="col03">{{ sku.name }}</li>
+			<li class="col04">{{ sku.unite }}</li>
+			<li class="col05">{{ sku.price }}RM</li>
+			<li class="col06">{{ sku.count }}</li>
+			<li class="col07">{{ sku.amount }}RM</li>
+		</ul>
+		{% endfor %}
+	</div>
+
+	<h3 class="common_title">Total amount settlement</h3>
+
+	<div class="common_list_con clearfix">
+		<div class="settle_con">
+			<div class="total_goods_count">total<em>{{ total_count }}</em>items，lump sum<b>{{ total_price }}RM</b></div>
+			<div class="transit">Freight：<b>0 RM</b></div>
+			<div class="total_pay">Real payment：<b>{{ total_price }}RM</b></div>
+		</div>
+	</div>
+
+	<div class="order_submit clearfix">
+		<a href="javascript:;" id="order_btn">Submit Order</a>
+	</div>
+	
+	<input type="hidden" id="sku_ids" value="{{ sku_ids }}">
+	{% csrf_token %}
+
+
+	<div class="popup_con">
+		<div class="popup">
+			<p>Orders submitted successfully！</p>
+		</div>
+		
+		<div class="mask"></div>
+	</div>
+	<script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/place_order.js' %}"></script>
+
+{% endblock content %}

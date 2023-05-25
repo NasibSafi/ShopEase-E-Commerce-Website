@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Fresh Everyday-User Center{% endblock title %}
+
+{% block content %}
+
+{% include 'header-con.html' %}
+
+<div class="search_bar clearfix">
+    <a href="{% url 'goods:index' %}" class="logo fl"><img src="{% static 'images/logo.png' %}"></a>
+    <div class="sub_page_name fl">|&nbsp;&nbsp;&nbsp;&nbsp;User Center</div>
+    <div class="search_con fr">
+        <input type="text" class="input_text fl" name="" placeholder="search product">
+        <input type="button" class="input_btn fr" name="" value="search">
+    </div>		
+</div>
+
+<div class="main_con clearfix">
+    <div class="left_menu_con clearfix">
+        <h3>User Center</h3>
+        <ul>
+            <li><a href="{% url 'users:user_info' %}" {% if cur_page == "info" %}class="active"{% endif %}>· Personal information</a></li>
+            <li><a href="{% url 'users:user_order' 1 %}" {% if cur_page == "order" %}class="active"{% endif %}>· All orders</a></li>
+            <li><a href="{% url 'users:user_site' %}" {% if cur_page == "site" %}class="active"{% endif %}>· Shipping address</a></li>
+        </ul>
+    </div>
+    <div class="right_content clearfix">
+        {% block user_content %}
+        {% endblock user_content %}
+    </div>
+</div>
+{% endblock content %}

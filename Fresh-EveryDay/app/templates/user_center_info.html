@@ -1,0 +1,31 @@
+{% extends 'base-user.html' %}
+{% load static %}
+
+{% block user_content %}
+<div class="info_con clearfix">
+	<h3 class="common_title2">Basic Information</h3>
+	<ul class="user_info_list">
+		<li><span>Username：</span>{{ user.username }}</li>
+		<li><span>Create time：</span>{{ user.create_time | date:"Y-m-d" }}</li>
+		<li><span>Email：</span>{{ user.email }}</li>
+	</ul>
+</div>
+
+<h3 class="common_title2">Recently Viewed</h3>
+<div class="has_view_list">
+	<ul class="goods_type_list clearfix">
+		{% for good in history_data %}
+		<li>
+			<a href="{% url 'goods:detail' good.id %}"><img src="{{ good.image.url }}"></a>
+			<h4><a href="{% url 'goods:detail' good.id %}">{{ good.name }}</a></h4>
+			<div class="operate">
+				<span class="prize">￥{{ good.price }}</span>
+				<span class="unit">{{ good.price }}/{{ good.unite }}</span>
+				<a href="#" class="add_goods" title="add to the cart"></a>
+			</div>
+		</li>
+		{% empty %} <span>No browsing history</span>
+		{% endfor %}
+	</ul>
+</div>
+{% endblock user_content %}

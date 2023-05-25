@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Fresh Everyday-Shopping Cart{% endblock title %}
+
+{% block content %}
+
+	{% include 'header-con.html' %}
+
+	{% include 'search-bar.html' %}
+
+	<div class="total_count">All products<em>{{ total_count }}</em>件</div>
+	<ul class="cart_list_th clearfix">
+		<li class="col01">Product name</li>
+		<li class="col02">Commodity unit</li>
+		<li class="col03">Commodity price</li>
+		<li class="col04">Quantity</li>
+		<li class="col05">Subtotal</li>
+		<li class="col06">Operate</li>
+	</ul>
+	<form action="/order/place" method="post" id="order_form">
+		{% for good in goods %}
+		<ul class="cart_list_td clearfix">
+			<li class="col01"><input type="checkbox" name="sku_id" value="{{ good.id }}" checked></li>
+			<li class="col02"><img src="{{ good.image.url }}"></li>
+			<li class="col03">{{ good.name }}</li>
+			<li class="col04">{{ good.unite }}</li>
+			<li class="col05">{{ good.price }}RM</li>
+			<li class="col06">
+				<div class="num_add">
+					<a href="javascript:;" class="add fl">+</a>
+					<input type="text" good_id="{{ good.id }}" class="num_show fl" value="{{ good.count }}">	
+					<a href="javascript:;" class="minus fl">-</a>	
+				</div>
+			</li>
+			<li class="col07">{{ good.amount }}RM</li>
+			<li class="col08"><a href="javascript:;">Delete</a></li>
+		</ul>
+		{% endfor %}
+		{% csrf_token %}
+	</form>
+
+
+	<ul class="settlements">
+		<li class="col01"><input type="checkbox" name="" checked=""></li>
+		<li class="col02">Select all</li>
+		<li class="col03">Total (excluding shipping)：<span>RM</span><em>{{ total_price }}</em><br>Total<b>{{ total_count }}</b>Items</li>
+		<li class="col04"><a href="javascript:;" onclick="$('#order_form').submit()">To settle</a></li>
+	</ul>
+
+	{% csrf_token %}
+
+	<script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+
+{% endblock content %}
+
