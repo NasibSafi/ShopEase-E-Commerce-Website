@@ -1,0 +1,46 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<div class="container">
+    <div style="margin-bottom: 5px;">
+        <a class="btn btn-success" href="/model/add/"> Add New One Model</a>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Model Name</th>
+                <th>Lanuch Date</th>
+                <th>Platform</th>
+                <th>Brand</th>
+                <th>Operation</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for obj in queryset %}
+        <tr>
+            <td>{{ obj.id }}</td>
+            <td>{{ obj.modelName }}</td>
+            <td>{{ obj.launchDate }}</td>
+            <td>{{ obj.get_platform_display}}</td>
+            <td>{{ obj.brand.name}}</td>
+            <td>
+                <a href="/overview/modif/?id={{ obj.id }}" class="btn-primary btn-xs" style="margin-right: 10px;"> Modify </a>
+                <a href="/overview/delete/?id={{ obj.id }}" class="btn-danger btn-xs"> Delete </a>
+            </td>
+
+        </tr>
+        {% endfor %}
+
+        </tbody>
+
+
+
+    </table>
+
+
+</div>
+
+
+
+{% endblock %}
