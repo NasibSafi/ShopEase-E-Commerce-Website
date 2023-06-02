@@ -13,37 +13,37 @@ class IndexGoodView(View):
 
     def get(self,request):
         '''
-            如果用户未登录，则返回生成的静态首页页面；
-            如果用户已登录，则判断是否有缓存数据，如果有缓存数据，则利用缓存数据，没有缓存数据则向数据库中查询并设置缓存
+            If the user is not logged in, return the generated static home page;
+            If the user is logged in, judge whether there is cached data, if there is cached data, use the cached data, if there is no cached data, query the database and set the cache
         '''
         if not request.user.is_authenticated:
             return render(request,'static_index.html')
         index_cache = cache.get('static_index_data')
         if index_cache is None:
-            # 获取所有的商品种类信息
+            # Get all product category information
             types = GoodsType.objects.all()
-            # 获取轮播图数据
+            # Get carousel data
             banners = IndexGoodsBanner.objects.all().order_by('index')
-            # 获取活动数据
+            # get activity data
             promotions = IndexPromotion.objects.all().order_by('index')
-            # 获取分类对应的首页数据
+            # Get the home page data corresponding to the category
             for type in types:
-                # 获取首页分类的文字信息
+                # Get the text information of the homepage category
                 title_banner = IndexCreatoryGoods.objects.filter(type=type,display_mode=0).order_by('index')
-                # 获取首页分类的图片信息
+                # Get the image information of the homepage category
                 image_banner = IndexCreatoryGoods.objects.filter(type=type).order_by('index')
 
                 type.title_banners = title_banner
                 type.image_banners = image_banner
             index_cache = {"types":types,"banners":banners,"promotions":promotions}
-            # 设置缓存
-            cache.set('static_index_data',index_cache,3600) # 1小时过期
+            # set cache
+            cache.set('static_index_data',index_cache,3600) # 1 hour expires
 
-        # 获取当前用户购物车数量
-        redis_conn = get_redis_connection('default') # 连接redis
+        # Get the current user's shopping cart quantity
+        redis_conn = get_redis_connection('default') # connect redis
         user_id = request.user.id
         cart_len = redis_conn.hlen('cart_%d' % user_id)
-        index_cache.update(cart_len=cart_len) # 向 index_cache字典中添加或更新cart_len字段
+        index_cache.update(cart_len=cart_len) #Add or update cart_len field to index_cache dictionary
 
         return render(request,'index.html',index_cache)
 
@@ -52,19 +52,19 @@ class GoodDetailView(View):
 
     def get(self,request,good_id):
         try:
-            # 获取当前商品的信息
+            # Get information about the current product
             goods = GoodsSKU.objects.get(id=good_id)
         except GoodsSKU.DoesNotExist:
             return redirect(reverse('goods:index')) 
 
-        # 获取所有商品种类信息
+        # Get all product category information
         types = GoodsType.objects.all()
-        # 获取当前分类商品新品推荐  两条数据
+        # Obtain two pieces of data for the new product recommendation of the current category
         new_products = GoodsSKU.objects.filter(Q(type=goods.type)&~Q(id=goods.id)).order_by('-create_time')[:2]
-        # 获取当前商品的其他规格商品信息
+        # Obtain other specifications and product information of the current product
         good_spu = GoodsSKU.objects.filter(goods=goods.goods).exclude(id=goods.id)
 
-        # 获取商品评论信息
+        # Get product review information
         order_goods = OrderGoods.objects.filter(goods_sku=good_id).exclude(comment='')
 
         data = {'goods':goods,'types':types,'new_products':new_products,"good_spu":good_spu,"order_goods":order_goods}
@@ -75,9 +75,9 @@ class GoodDetailView(View):
             cart_len = redis_conn.hlen('cart_%d' % user_id)
             data.update(cart_len=cart_len)
 
-            # 添加历史浏览记录
-            redis_conn.lrem('history_%d' % user_id,0,good_id) # 先移除掉之前存在的当前商品浏览记录，有则移除，无则不处理
-            redis_conn.lpush('history_%d' % user_id,good_id) # 往左侧插入当前商品id记录
+            # add browsing history
+            redis_conn.lrem('history_%d' % user_id,0,good_id) # First remove the current product browsing records that existed before.
+            redis_conn.lpush('history_%d' % user_id,good_id) # Insert the current product id record to the left
 
         return render(request,'detail.html',data)
 
@@ -91,9 +91,9 @@ class GoodListView(View):
         except GoodsType.DoesNotExist:
             return redirect(reverse('goods:index'))
         
-        # 查询所有商品分类信息
+        # Query all commodity classification information
         types = GoodsType.objects.all()
-        # 获取新品推荐数据
+        # Get new product recommendation data
         new_products = GoodsSKU.objects.filter(type=type).order_by('-create_time')[:2]
 
         sort = request.GET.get('sort')
@@ -116,11 +116,12 @@ class GoodListView(View):
 
         goods = good_page.page(page)
 
-        """构造页码数：返回5个页码按钮，前两个页码数，当前页码数，后两个页码数"""
-        # 当总页码数小于5时，返回所有的页码数
-        # 如果当前页是前3页，则显示1-5页
-        # 如果当前页是后3页，则显示后5页
-        # 其他情况，显示 当前页的前2页，当前页，当前页的后2页
+        """Construct page number: return 5 page number buttons, the first two page numbers, the current page number, and the last two page numbers"""
+         # When the total number of pages is less than 5, return all page numbers
+         # If the current page is the first 3 pages, then display pages 1-5
+         # If the current page is the last 3 pages, then display the last 5 pages
+         # In other cases, display the first 2 pages of the current page, the current page, and the next 2 pages of the current page
+        
         if good_page.num_pages < 5:
             page_range = range(1,good_page.num_pages+1)
         elif goods.number <= 3:

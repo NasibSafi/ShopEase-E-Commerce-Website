@@ -22,7 +22,7 @@
 					<a href="{% url 'goods:detail' good.object.id %}"><img src="{{ good.object.image.url }}"></a>
 					<h4><a href="{% url 'goods:detail' good.object.id %}">{{ good.object.name }}</a></h4>
 					<div class="operate">
-						<span class="prize">￥{{ good.object.price }}</span>
+						<span class="prize">MYR. {{ good.object.price }}</span>
 						<span class="unit">{{ good.object.price }}/{{ good.object.unite }}</span>
 						<a href="#" class="add_goods" title="加入购物车"></a>
 					</div>

@@ -54,7 +54,7 @@
 					<li>
 						<a href="{% url 'goods:detail' good_id=new_good.id %}"><img src="{{ new_good.image.url }}"></a>
 						<h4><a href="{% url 'goods:detail' good_id=new_good.id %}">{{ new_good.name }}</a></h4>
-						<div class="prize">￥{{ new_good.price }}</div>
+						<div class="prize">MYR {{ new_good.price }}</div>
 					</li>
 					{% endfor %}
 				</ul>

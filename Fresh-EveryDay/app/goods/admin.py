@@ -3,25 +3,26 @@ from django.core.cache import cache
 from goods.models import GoodsType, GoodsSKU, IndexGoodsBanner, IndexPromotion, Goods, IndexCreatoryGoods
 
 
+
 # Register your models here.
 
 class BaseModelAdmin(admin.ModelAdmin):
-    '''新增或更新表中的数据时调用'''
+    '''Called when adding or updating data in the table'''
     def save_model(self,request,obj,form,change):
         super().save_model(request,obj,form,change) 
-        # 发出任务，让celery重新生成静态页面
+        # Issue tasks to let celery regenerate static pages
         from celery_tasks.tasks import generate_static_indexhtml
         generate_static_indexhtml.delay()
-        # 删除首页缓存数据
+        # Delete home page cache data
         cache.delete('static_index_data')
 
     '''删除表中的数据时调用'''
     def delete_model(self, request, obj):
         super().delete_model(request, obj)
         from celery_tasks.tasks import generate_static_indexhtml
-        # 发出任务，让celery重新生成静态页面
+        # Issue tasks to let celery regenerate static pages
         generate_static_indexhtml.delay()
-        # 删除首页缓存数据
+        # Delete home page cache data
         cache.delete('static_index_data')
 
 

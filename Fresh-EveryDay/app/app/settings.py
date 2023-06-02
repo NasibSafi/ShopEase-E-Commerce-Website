@@ -86,15 +86,8 @@ WSGI_APPLICATION = 'app.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'fresh_everyday',
-        'HOST':'127.0.0.1',
-        'PORT':'3306',
-        'USER':'root',
-        'PASSWORD':'root',
-        'OPTIONS': {
-            "init_command": "SET foreign_key_checks = 0;" # 关闭外键约束
-        }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -126,7 +119,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'zh-hans'
+LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Asia/Shanghai'
 
@@ -166,7 +159,7 @@ EMAIL_HOST = 'smtp.qq.com' # smtp service address
 EMAIL_PORT = 587 # smtp service port
 EMAIL_HOST_USER = '1758007238@qq.com' #sender email
 EMAIL_HOST_PASSWORD = 'mqacekhfalgweehb' # Authorization code
-EMAIL_PROM = 'Dailyfresh<1758007238@qq.com>'
+EMAIL_PROM = 'ShopEase<1758007238@qq.com>'
 
 # Django cache configuration
 CACHES = {
@@ -188,8 +181,8 @@ LOGIN_URL = '/user/login' # Configure the URL for redirecting login requests
 #Set Django's file storage class
 DEFAULT_FILE_STORAGE = "minio_storage.storage.MinioMediaStorage"
 MINIO_STORAGE_ENDPOINT = '127.0.0.1:9000'
-MINIO_STORAGE_ACCESS_KEY = 'qXGziNImYjUHetKMNxLA'
-MINIO_STORAGE_SECRET_KEY = '5C5R5NCUS2zZ77yrmRxUZg8xGHv2CKQ8XEN2zQXW'
+MINIO_STORAGE_ACCESS_KEY = '8PLXNrzVAXw4htC5eNvp'
+MINIO_STORAGE_SECRET_KEY = 'FMjW40SN1dd27lk0bfQMw2zgaDDzFxXX1crvo7Ul'
 MINIO_STORAGE_USE_HTTPS = False
 MINIO_STORAGE_MEDIA_OBJECT_METADATA = {"Cache-Control": "max-age=1000"}
 MINIO_STORAGE_MEDIA_BUCKET_NAME = 'local-media'
@@ -222,3 +215,18 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]  # Configure static file di
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
 HAYSTACK_SEARCH_RESULTS_PER_PAGE = 6 # Full-text search Number of search result pages
+
+#settings.py add
+#Set Django's file storage class
+DEFAULT_FILE_STORAGE = "minio_storage.storage.MinioMediaStorage"
+MINIO_STORAGE_ENDPOINT = '127.0.0.1:9000'
+MINIO_STORAGE_ACCESS_KEY = '8PLXNrzVAXw4htC5eNvp'
+MINIO_STORAGE_SECRET_KEY = 'FMjW40SN1dd27lk0bfQMw2zgaDDzFxXX1crvo7Ul'
+MINIO_STORAGE_USE_HTTPS = False
+MINIO_STORAGE_MEDIA_OBJECT_METADATA = {"Cache-Control": "max-age=1000"}
+MINIO_STORAGE_MEDIA_BUCKET_NAME = 'local-media'
+MINIO_STORAGE_MEDIA_BACKUP_BUCKET = 'Recycle Bin'
+MINIO_STORAGE_MEDIA_BACKUP_FORMAT = '%c/'
+MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = True
+MINIO_STORAGE_STATIC_BUCKET_NAME = 'local-static'
+MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET = True

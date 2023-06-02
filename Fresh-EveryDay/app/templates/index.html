@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Fresh Everyday-Index{% endblock title %}
+{% block title %}ShopEase-Index{% endblock title %}
 
 {% block toplink %}
 	<script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
@@ -20,7 +20,7 @@
 			<ul class="navlist fl">
 				<li><a href="">Front page</a></li>
 				<li class="interval">|</li>
-				<li><a href="">Mobile fresh</a></li>
+				<li><a href="">New Arrivals</a></li>
 				<li class="interval">|</li>
 				<li><a href="">Lottery</a></li>
 			</ul>
@@ -36,7 +36,7 @@
 		<div class="slide fl">
 			<ul class="slide_pics">
 				{% for banner in banners %}
-				<li><img src="{{ banner.image.url }}" alt="幻灯片"></li>
+				<li><img src="{{ banner.image.url }}" alt="Image 1"></li>
 				{% endfor %}
 			</ul>
 			<div class="prev"></div>
@@ -69,7 +69,7 @@
 				<li>
 					<h4><a href="{% url 'goods:detail' good_id=image_banners.good.id %}">{{ image_banners.good.name }}</a></h4>
 					<a href="{% url 'goods:detail' good_id=image_banners.good.id %}"><img src="{{ image_banners.good.image.url }}"></a>
-					<div class="prize">¥ {{ image_banners.good.price }}</div>
+					<div class="prize">MYR {{ image_banners.good.price }}</div>
 				</li>
 				{% endfor %}
 			</ul>
