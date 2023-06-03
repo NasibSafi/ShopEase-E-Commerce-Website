@@ -95,12 +95,12 @@ html,body{height:100%}
 .subnav li a{display:block;height:44px;line-height:44px;text-indent:71px;font-size:14px;color:#333}
 .subnav li a:hover{color:#ff8800}
 
-.subnav li .fruit{background:url(../images/icons.png) 28px 0px no-repeat;}
-.subnav li .seafood{background:url(../images/icons.png) 28px -43px no-repeat;}
-.subnav li .meet{background:url(../images/icons.png) 28px -86px no-repeat;}
-.subnav li .egg{background:url(../images/icons.png) 28px -132px no-repeat;}
-.subnav li .vegetables{background:url(../images/icons.png) 28px -174px no-repeat;}
-.subnav li .ice{background:url(../images/icons.png) 28px -220px no-repeat;}
+.subnav li .camera{background:url(../images/icons.png) 28px 0px no-repeat;}
+.subnav li .mobile{background:url(../images/icons.png) 28px -43px no-repeat;}
+.subnav li .laptop{background:url(../images/icons.png) 28px -86px no-repeat;}
+.subnav li .watches{background:url(../images/icons.png) 28px -132px no-repeat;}
+.subnav li .tablets{background:url(../images/icons.png) 28px -174px no-repeat;}
+.subnav li .headphones{background:url(../images/icons.png) 28px -220px no-repeat;}
 
 
 .slide{width:760px;height:270px;position:relative;overflow:hidden;}
@@ -129,7 +129,7 @@ html,body{height:100%}
 
 .goods_con{height:300px;}
 .goods_banner{width:200px;height:300px;}
-.goods_banner img{width:240px;height:240px;}
+.goods_banner img{width:240px;height:220px;}
 
 .goods_list{width:1000px;height:299px;border-bottom:1px solid #ededed;overflow: hidden;}
 .goods_list li{height:299px;width:249px;border-right:1px solid #ededed;float:left}

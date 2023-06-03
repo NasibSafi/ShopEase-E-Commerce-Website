@@ -29,6 +29,9 @@ class Goods(BaseModel):
         verbose_name = 'Goods SPU'
         verbose_name_plural = verbose_name
 
+    def __str__(self):
+        return self.name
+
 class GoodsSKU(BaseModel):
 
     status_choices = (
@@ -77,6 +80,9 @@ class IndexGoodsBanner(BaseModel):
         db_table = 'f_index_banner'
         verbose_name = 'Index Banner Table'
         verbose_name_plural = verbose_name
+    
+    def __str__(self):
+        return self.good
 
 
 class IndexPromotion(BaseModel):
@@ -90,6 +96,9 @@ class IndexPromotion(BaseModel):
         db_table = 'f_index_promotion'
         verbose_name = 'Index Event Table'
         verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.name
 
 
 class IndexCreatoryGoods(BaseModel):
@@ -108,5 +117,9 @@ class IndexCreatoryGoods(BaseModel):
         db_table = 'f_index_creatory'
         verbose_name = 'Index Category Goods Table'
         verbose_name_plural = verbose_name
+    
+    def __str__(self):
+        return str(self.good)
+
 
 

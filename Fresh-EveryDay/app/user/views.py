@@ -33,7 +33,7 @@ class RegisterView(View):
         if not re.match(r'^[a-z0-9][\w\.\-]*@[a-z0-9\-]+(\.[a-z]{2,5}){1,2}$',email):
             return render(request,'register.html',{'errmsg':'邮箱格式不正确'})
 
-        # 校验用户名是否重复
+        # Check if username is duplicate
         try:
            user = User.objects.get(username=user_name)
         except User.DoesNotExist:
@@ -46,14 +46,14 @@ class RegisterView(View):
         user.is_active = 0
         user.save()
 
-        # 加密用户信息
+        # Encrypt user information
         auth_s = URLSafeSerializer(settings.SECRET_KEY,'auth')
         token = auth_s.dumps(user.id)
 
-        # 异步发送邮件
+        # Send mail asynchronously
         send_email_task.delay(user_name,email,token)
 
-        return redirect(reverse('users:login')) # 注册成功 跳转到登录页
+        return redirect(reverse('users:login')) # Registered successfully Jump to the login page
 
 class ActiveView(View):
 
@@ -65,11 +65,11 @@ class ActiveView(View):
             user = User.objects.get(id=id)
             user.is_active = 1
             user.save()
-            return HttpResponse("激活成功！")
+            return HttpResponse("Activation successful!")
         except User.DoesNotExist:
-            return HttpResponse("激活失败，没有该用户")
+            return HttpResponse("Activation failed, there is no such user")
         except Exception as err:
-            return HttpResponse('错误：请勿随意激活')
+            return HttpResponse('Error: Not Yet Activated')
 
 class LoginView(View):
 
@@ -82,18 +82,18 @@ class LoginView(View):
         password = request.POST.get('pwd')
 
         if not all([username,password]):
-            return render(request,'login.html',{'errmsg':"参数错误"})
+            return render(request,'login.html',{'errmsg':"Parameter error"})
 
         user = authenticate(request,username=username,password=password)
         if user is not None:
             if user.is_active:
                 login(request,user)
-                next_url = request.GET.get('next',reverse('users:user_info')) # 获取登录之后要跳转的地址，如果有next就跳转到next，没有就跳转的商品首页
+                next_url = request.GET.get('next',reverse('users:user_info')) # Obtain the address to be redirected after login, if there is next, it will jump to next, if not, it will jump to the product home page
                 return redirect(next_url)
             else:
-                return render(request,'login.html',{'errmsg':'该用户未激活'})
+                return render(request,'login.html',{'errmsg':'This user is not active'})
         else:
-            return render(request,'login.html',{'errmsg':'用户名或密码错误'})
+            return render(request,'login.html',{'errmsg':'wrong user name or password'})
 
 class LogoutView(View):
 
@@ -109,7 +109,7 @@ class UserInfoView(LoginRequiredMixin,View):
         }
         redis_conn = get_redis_connection("default")
         user_id = request.user.id
-        history_list = redis_conn.lrange('history_%d' % user_id,0,4) # 获取前5个历史浏览记录
+        history_list = redis_conn.lrange('history_%d' % user_id,0,4) # Get the first 5 historical browsing records
         history_data = GoodsSKU.objects.filter(id__in=history_list)
         data.update(history_data=history_data)
         return render(request,'user_center_info.html',data)
@@ -117,7 +117,7 @@ class UserInfoView(LoginRequiredMixin,View):
 class UserOrderView(LoginRequiredMixin,View):
 
     def get(self,request,page):
-        # 获取用户订单信息
+        # Get user order information
         user_id = request.user.id
 
         order_list = OrderInfo.objects.filter(user_id=user_id).order_by('-create_time')
@@ -126,7 +126,7 @@ class UserOrderView(LoginRequiredMixin,View):
             order_item.order_goods = order_goods
             order_item.status_name = OrderInfo.ORDER_STATUS[order_item.status]
 
-        order_page = Paginator(order_list,1) # 1条数据为一个页码
+        order_page = Paginator(order_list,1) # 1 piece of data is a page number
         try:
             page = int(page)
         except Exception as e:
@@ -176,13 +176,13 @@ class UserSiteView(LoginRequiredMixin,View):
         phone = request.POST.get('phone')
 
         if not all([receiver,addr,phone]):
-            data["errmsg"] = "参数错误-收件人、详细地址、手机号不能为空"
+            data["errmsg"] = "Parameter error - recipient, detailed address, phone number cannot be empty"
             return render(request,'user_center_site.html',data)
         if not re.match(r'^1[0-9]{10}$',phone):
-            data['errmsg'] = "手机号填写错误"
+            data['errmsg'] = "Mobile phone number is wrong"
             return render(request,'user_center_site.html',data)
 
-        # 如果改用户当前没有默认地址，则新添加的地址为默认地址
+        # If the user does not currently have a default address, the newly added address will be the default address
         default_addr = Address.objects.getDefaultAddress(user)
         if default_addr:
             is_default = False

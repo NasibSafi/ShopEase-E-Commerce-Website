@@ -18,8 +18,8 @@ app_celery = Celery('celery_tasks.tasks',broker='redis://127.0.0.1:6379//8')
 
 @app_celery.task
 def send_email_task(user_name,email,token):
-        subject = 'Fresh Everyday welcome message'
-        message = '<h1>%s, Welcome to become a registered member of Fresh Everyday</h1>Please click the link below to activate your account<br/><a href="http://127.0.0.1:8000/user/active/%s">http://127.0.0.1:8000/user/active/%s</a>' % (user_name, token, token)
+        subject = 'ShopEase welcome message'
+        message = '<h1>%s, Welcome to become a registered member of ShopEase</h1>Please click the link below to activate your account<br/><a href="http://127.0.0.1:8000/user/active/%s">http://127.0.0.1:8000/user/active/%s</a>' % (user_name, token, token)
         send_mail(subject,'',settings.EMAIL_HOST_USER,[email],html_message=message)
 
 

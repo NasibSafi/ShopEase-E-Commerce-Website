@@ -14,20 +14,20 @@ class CartView(LoginRequiredMixin,View):
         user_id = request.user.id
         redis_conn = get_redis_connection("default")
 
-        cart_dict = redis_conn.hgetall('cart_%d' % user_id) # {"商品id":"商品数量"}
+        cart_dict = redis_conn.hgetall('cart_%d' % user_id) # {"Product id":"Product Quantity"}
         total_price = 0
         total_count = 0
         goods = []
         for good_id,count in cart_dict.items():
-            # 根据商品的id获取商品信息
+            # Get product information based on product id
             good = GoodsSKU.objects.get(id=good_id)
-            # 计算商品的小计
+            # Calculate subtotals for items
             amount = good.price * int(count)
-            # 保存商品的小计和数量
+            # Save item subtotal and quantity
             good.amount = amount
             good.count = int(count) 
             goods.append(good)
-            # 累加 计算商品的总数目 和总价格
+            # Add up to calculate the total number of items and the total price
             total_count += int(count)
             total_price += amount
         
@@ -39,7 +39,7 @@ class CartView(LoginRequiredMixin,View):
 
 class CartAddView(View):
     """
-    需要传递的数据：商品id，商品数量，csrf防御
+    Accumulate the data that need to be passed to calculate the total number of items and the total price: item id, item quantity, csrf defense
     """
     def post(self,request):
         
@@ -47,26 +47,26 @@ class CartAddView(View):
         good_count = request.POST.get('good_count')
 
         if not request.user.is_authenticated:
-            return JsonResponse({"res":0,"msg":"未登录"})
+            return JsonResponse({"res":0,"msg":"not logged in"})
 
         if not all([good_id,good_count]):
-            return JsonResponse({"res":0,"msg":"参数错误"})
+            return JsonResponse({"res":0,"msg":"Parameter error"})
 
         try:
             count = int(good_count)
         except:
-            return JsonResponse({"res":0,"msg":"购物车数量不是一个整数"})
+            return JsonResponse({"res":0,"msg":"The cart quantity is not an integer"})
         try:
            good = GoodsSKU.objects.get(id=good_id)
         except GoodsSKU.DoesNotExist:
-            return JsonResponse({"res":0,"msg":"没有该商品，请勿恶意操作"})
+            return JsonResponse({"res":0,"msg":"Without this product, please do not operate maliciously"})
 
         if good.stock < count:
-            return JsonResponse({"res":0,"msg":"库存不足"})
+            return JsonResponse({"res":0,"msg":"Inventory shortage"})
 
         user_id = request.user.id
         redis_conn = get_redis_connection("default")
-        # 查询 当前商品是否已加入购物车，如果已加入需累加
+        # Query whether the current product has been added to the shopping cart, if it has been added, it needs to be accumulated
         cur_good_count = redis_conn.hget('cart_%d' % user_id,good_id)
         if cur_good_count:
             count += int(cur_good_count)
@@ -74,7 +74,7 @@ class CartAddView(View):
 
         cart_len = redis_conn.hlen('cart_%d' % user_id)
 
-        return JsonResponse({"res":1,"msg":"加入购物车成功","cart_len":cart_len})
+        return JsonResponse({"res":1,"msg":"Add to Cart successful","cart_len":cart_len})
         
 class CartUpdateView(View):
 
@@ -84,56 +84,56 @@ class CartUpdateView(View):
         good_count = request.POST.get('good_count')
 
         if not request.user.is_authenticated:
-            return JsonResponse({"res":0,"msg":"未登录"})
+            return JsonResponse({"res":0,"msg":"not logged in"})
 
         if not all([good_id,good_count]):
-            return JsonResponse({"res":0,"msg":"参数错误"})
+            return JsonResponse({"res":0,"msg":"Parameter error"})
 
         try:
             count = int(good_count)
         except:
-            return JsonResponse({"res":0,"msg":"购物车数量不是一个整数"})
+            return JsonResponse({"res":0,"msg":"The cart quantity is not an integer"})
         try:
            good = GoodsSKU.objects.get(id=good_id)
         except GoodsSKU.DoesNotExist:
-            return JsonResponse({"res":0,"msg":"没有该商品，请勿恶意操作"})
+            return JsonResponse({"res":0,"msg":"Without this product, please do not operate maliciously"})
 
         if good.stock < count:
-            return JsonResponse({"res":0,"msg":"库存不足"})
+            return JsonResponse({"res":0,"msg":"Inventory shortage"})
 
         user_id = request.user.id
         redis_conn = get_redis_connection("default")
-        # 设置新的购物车加入数量
+        # Set new cart addition quantity
         redis_conn.hset('cart_%d' % user_id,good_id,count)
 
-        # 计算商品购物车总数
+        # Calculate the total number of items in the shopping cart
         cart_total = 0
         cart_list = redis_conn.hvals('cart_%d' % user_id)
         for item in cart_list:
             cart_total += int(item)
         
-        return JsonResponse({"res":1,"msg":"更新购物车数量成功","cart_total":cart_total})
+        return JsonResponse({"res":1,"msg":"Update the shopping cart quantity successfully","cart_total":cart_total})
 
 class CartDelView(View):
     
     def post(self,request):
         good_id = request.POST.get('good_id')
         if not request.user.is_authenticated:
-            return JsonResponse({"res":0,"msg":"未登录"})
+            return JsonResponse({"res":0,"msg":"not logged in"})
         if not good_id:
-            return JsonResponse({"res":0,"msg":"参数错误"})
+            return JsonResponse({"res":0,"msg":"Parameter error"})
         try:
             GoodsSKU.objects.get(id=good_id)
         except GoodsSKU.DoesNotExist:
-            return JsonResponse({"res":0,"msg":"没有该商品，请勿恶意操作"})
+            return JsonResponse({"res":0,"msg":"Without this product, please do not operate maliciously"})
 
         user_id = request.user.id
         redis_conn = get_redis_connection("default")
-        redis_conn.hdel('cart_%d' % user_id,good_id) # 删除当前商品购物车数据
+        redis_conn.hdel('cart_%d' % user_id,good_id) # Delete the current product shopping cart data
         cart_len = redis_conn.hlen('cart_%d' % user_id)
         cart_total = 0
         cart_list = redis_conn.hvals('cart_%d' % user_id)
         for item in cart_list:
             cart_total += int(item)
         
-        return JsonResponse({"res":1,"msg":"删除成功","cart_len":cart_len,"cart_total":cart_total})
+        return JsonResponse({"res":1,"msg":"successfully deleted","cart_len":cart_len,"cart_total":cart_total})
