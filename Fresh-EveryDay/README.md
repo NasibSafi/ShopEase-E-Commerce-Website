@@ -10,6 +10,8 @@ This is a group project for WOC7014 FRAMEWORK-BASED SOFTWARE DESIGN AND DEVELOPM
 | Liu JiaLiang   | S2180651      |
 | Jie Jiang      | S2183694      |
 
+<img src="Ecommerce_Website/static/images/ShopEase.jpg" width="1000">
+
 ## Project Instruction
 1. Fresh Everyday B2C PC-website
 2. Functional modules: user module (registration/login/activation/exit/personal center/address), goods module (homepage/details/list/search), cart module (add/delete/modify/query), order module (submit order /request payment/query payment result/comment)
