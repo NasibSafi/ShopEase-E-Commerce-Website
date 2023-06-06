@@ -12,7 +12,7 @@ This is a group project for WOC7014 FRAMEWORK-BASED SOFTWARE DESIGN AND DEVELOPM
 | Liu JiaLiang | S2180651      |
 | Jie Jiang    | S2183694      |
 
-<img src="ShopEase-E-Commerce-Website\ShopEase\app\static\images\ShopEase.jpg" width="1000">
+<img src="ShopEase/app/static/images/ShopEase.jpg" width="1000">
 
 ## Project Instruction
 
