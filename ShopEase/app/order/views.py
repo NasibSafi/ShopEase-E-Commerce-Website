@@ -190,7 +190,7 @@ class OrderPayView(View):
             return JsonResponse({"res":0,"msg":"login timeout"})
         trade_no = request.POST.get('trade_no')
         if not trade_no:
-            return JsonResponse({"res":0,"msg":"参数错误"})
+            return JsonResponse({"res":0,"msg":"Parameter error"})
         try:
             order_info = OrderInfo.objects.get(order_id=trade_no,user=request.user,pay_methods=3,status=1)
         except OrderInfo.DoesNotExist:
@@ -206,7 +206,7 @@ class OrderQueryView(View):
             return JsonResponse({"res":0,"msg":"login timeout"})
         trade_no = request.POST.get('trade_no')
         if not trade_no:
-            return JsonResponse({"res":0,"msg":"参数错误"})
+            return JsonResponse({"res":0,"msg":"Parameter error"})
         try:
             order_info = OrderInfo.objects.get(order_id=trade_no,user=request.user,pay_methods=3,status=1)
         except OrderInfo.DoesNotExist:
